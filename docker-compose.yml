@@ -3,6 +3,7 @@ services:
     image: drupal:10-apache
     ports:
       - 8080:80
+    entrypoint: ["/init-drupal.sh"]
     volumes:
       # change the relative path on the left of the colon to point to a location where you can store the files.
       # this ensures you keep your files somewhere safe and not on shared computers.
@@ -10,10 +11,8 @@ services:
       - ./drupal-data/modules:/var/www/html/modules
       - ./drupal-data/profiles:/var/www/html/profiles
       - ./drupal-data/themes:/var/www/html/themes
-      # this takes advantage of the feature in Docker that a new anonymous
-      # volume (which is what we're creating here) will be initialized with the
-      # existing content of the image at the same location
       - ./drupal-data/sites:/var/www/html/sites
+      - ./init-drupal.sh:/init-drupal.sh
     restart: always
     depends_on:
       - mysql
@@ -23,6 +22,9 @@ services:
       - DRUPAL_DATABASE_NAME=drupal
       - DRUPAL_DATABASE_USERNAME=drupal
       - DRUPAL_DATABASE_PASSWORD=drupal
+    
+    
+      
 
   mysql:
     image: mysql:8.0
@@ -52,10 +54,4 @@ services:
     depends_on:
       - mysql
 
-# Docker volumes (uncomment if you are using local data (not recommended) above)
-#volumes:
-  #drupal_modules:
-  #drupal_profiles:
-  #drupal_themes:
-  #drupal_sites:
-  #db_data:
+
