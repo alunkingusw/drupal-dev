@@ -4,6 +4,9 @@ services:
     ports:
       - 8080:80
     volumes:
+      # change the relative path on the left of the colon to point to a location where you can store the files.
+      # this ensures you keep your files somewhere safe and not on shared computers.
+      # do the same thing for the mysql data further down.
       - ./drupal-data/modules:/var/www/html/modules
       - ./drupal-data/profiles:/var/www/html/profiles
       - ./drupal-data/themes:/var/www/html/themes
@@ -30,15 +33,9 @@ services:
       MYSQL_PASSWORD: drupal
       MYSQL_ROOT_PASSWORD: root
     volumes:
-      # Uncomment this line to use Docker volumes (not recommended, data is not portable):
-      # - db_data:/var/lib/mysql
-      
-      # Recommended: Use local/cloud drive folders (portable data)
-      # To store database in a specific location:
-      # 1. Ensure the line above (RE: docker volume) is commented out
-      # 2. Replace the path below with your cloud drive location for your database.
-      # 2a. See above for how to do absolute paths, the example below is a relative path.
-      #
+      # change the path on the left of the colon to point to a location where you can store the files.
+      # this ensures you keep your files somewhere safe and not on shared computers.
+      # do the same thing for the drupal data further up.
       - ./drupal-data/mysql:/var/lib/mysql
     restart: always
 
