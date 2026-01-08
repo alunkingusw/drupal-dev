@@ -1,0 +1,64 @@
+services:
+  drupal:
+    image: drupal:10-apache
+    ports:
+      - 8080:80
+    volumes:
+      - ./drupal-data/modules:/var/www/html/modules
+      - ./drupal-data/profiles:/var/www/html/profiles
+      - ./drupal-data/themes:/var/www/html/themes
+      # this takes advantage of the feature in Docker that a new anonymous
+      # volume (which is what we're creating here) will be initialized with the
+      # existing content of the image at the same location
+      - ./drupal-data/sites:/var/www/html/sites
+    restart: always
+    depends_on:
+      - mysql
+    environment:
+      - DRUPAL_DATABASE_HOST=mysql
+      - DRUPAL_DATABASE_PORT=3306
+      - DRUPAL_DATABASE_NAME=drupal
+      - DRUPAL_DATABASE_USERNAME=drupal
+      - DRUPAL_DATABASE_PASSWORD=drupal
+
+  mysql:
+    image: mysql:8.0
+    container_name: drupal_mysql
+    environment:
+      MYSQL_DATABASE: drupal
+      MYSQL_USER: drupal
+      MYSQL_PASSWORD: drupal
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      # Uncomment this line to use Docker volumes (not recommended, data is not portable):
+      # - db_data:/var/lib/mysql
+      
+      # Recommended: Use local/cloud drive folders (portable data)
+      # To store database in a specific location:
+      # 1. Ensure the line above (RE: docker volume) is commented out
+      # 2. Replace the path below with your cloud drive location for your database.
+      # 2a. See above for how to do absolute paths, the example below is a relative path.
+      #
+      - ./drupal-data/mysql:/var/lib/mysql
+    restart: always
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: drupal_phpmyadmin
+    ports:
+      - "8081:80"
+    environment:
+      - PMA_HOST=mysql
+      - PMA_USER=drupal
+      - PMA_PASSWORD=drupal
+    restart: always
+    depends_on:
+      - mysql
+
+# Docker volumes (uncomment if you are using local data (not recommended) above)
+#volumes:
+  #drupal_modules:
+  #drupal_profiles:
+  #drupal_themes:
+  #drupal_sites:
+  #db_data:
