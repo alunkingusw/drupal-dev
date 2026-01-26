@@ -6,6 +6,7 @@ if [ ! -f /var/www/html/sites/default/settings.php ]; then
   echo "Initialising Drupal sites directory..."
 
   # Copy default sites from the image
+  mkdir /var/www/html/sites/default/
   cp /opt/drupal/web/core/assets/scaffold/files/default.settings.php /var/www/html/sites/default/
   cp /opt/drupal/web/core/assets/scaffold/files/default.settings.php /var/www/html/sites/default/settings.php
 
