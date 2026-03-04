@@ -13,6 +13,7 @@ services:
       - ./drupal-data/themes:/var/www/html/themes
       - ./drupal-data/sites:/var/www/html/sites
       - ./init-drupal.sh:/init-drupal.sh
+      - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
     restart: always
     depends_on:
       - mysql
